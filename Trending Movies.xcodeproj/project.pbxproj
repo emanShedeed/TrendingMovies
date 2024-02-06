@@ -13,6 +13,9 @@
 		D929233B2B7139BF00F091F4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D92923392B7139BF00F091F4 /* LaunchScreen.storyboard */; };
 		D92923462B7139BF00F091F4 /* Trending_MoviesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92923452B7139BF00F091F4 /* Trending_MoviesTests.swift */; };
 		D9DF06282B725F7E004B14A1 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DF06272B725F7E004B14A1 /* AppCoordinator.swift */; };
+		D9DF062D2B727DD8004B14A1 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DF062C2B727DD8004B14A1 /* Movie.swift */; };
+		D9DF062F2B727EED004B14A1 /* MoviesPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DF062E2B727EED004B14A1 /* MoviesPage.swift */; };
+		D9DF06312B727F74004B14A1 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DF06302B727F74004B14A1 /* Genre.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +46,9 @@
 		D92923452B7139BF00F091F4 /* Trending_MoviesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trending_MoviesTests.swift; sourceTree = "<group>"; };
 		D929234B2B7139BF00F091F4 /* Trending MoviesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Trending MoviesUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9DF06272B725F7E004B14A1 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		D9DF062C2B727DD8004B14A1 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		D9DF062E2B727EED004B14A1 /* MoviesPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesPage.swift; sourceTree = "<group>"; };
+		D9DF06302B727F74004B14A1 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,8 +224,8 @@
 		D9DF06292B7265FE004B14A1 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				D9DF062B2B72661E004B14A1 /* UseCases */,
 				D9DF062A2B72660E004B14A1 /* Entities */,
+				D9DF062B2B72661E004B14A1 /* UseCases */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -227,6 +233,9 @@
 		D9DF062A2B72660E004B14A1 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				D9DF062C2B727DD8004B14A1 /* Movie.swift */,
+				D9DF062E2B727EED004B14A1 /* MoviesPage.swift */,
+				D9DF06302B727F74004B14A1 /* Genre.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -368,8 +377,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9DF062F2B727EED004B14A1 /* MoviesPage.swift in Sources */,
 				D9DF06282B725F7E004B14A1 /* AppCoordinator.swift in Sources */,
 				D92923362B7139BE00F091F4 /* Trending_Movies.xcdatamodeld in Sources */,
+				D9DF06312B727F74004B14A1 /* Genre.swift in Sources */,
+				D9DF062D2B727DD8004B14A1 /* Movie.swift in Sources */,
 				D929232C2B7139BE00F091F4 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -544,7 +556,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5C73VTKMYW;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Trending Movies/Info.plist";
+				INFOPLIST_FILE = "/Users/mohamed/Documents/TrendingMovies/Trending Movies/Configuration/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -571,7 +583,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5C73VTKMYW;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Trending Movies/Info.plist";
+				INFOPLIST_FILE = "/Users/mohamed/Documents/TrendingMovies/Trending Movies/Configuration/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
