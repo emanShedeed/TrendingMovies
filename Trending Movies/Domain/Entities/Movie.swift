@@ -24,6 +24,7 @@ struct Movie: Decodable {
 
 // MARK: - SpokenLanguage
 struct SpokenLanguage: Codable {
+    let id: Int
     let name: String
 
 }
