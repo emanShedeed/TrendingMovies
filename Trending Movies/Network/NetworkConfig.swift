@@ -15,7 +15,7 @@ protocol URLRequestConvertible {
 }
 protocol RouterRequestConvertible: URLRequestConvertible {
     var method: HTTPMethod { get }
-    var endPoint: Endpoint { get }
+    var endPoint: EndPoint { get }
     var queryItems: QueryItems? { get }
     var headers: [String: String]? { get }
     var parameters: Parameters? { get }

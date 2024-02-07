@@ -22,7 +22,15 @@
     <entity name="MoviesPageEntity" representedClassName=".MoviesPageEntity" syncable="YES" codeGenerationType="class">
         <attribute name="page" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="totalPages" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="moiesSummary" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieSummaryEntity"/>
         <relationship name="movies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity"/>
+    </entity>
+    <entity name="MovieSummaryEntity" representedClassName="MovieSummaryEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="posterPath" optional="YES" attributeType="String"/>
+        <attribute name="releaseDate" optional="YES" attributeType="String"/>
+        <attribute name="title" attributeType="String"/>
+        <relationship name="genreIds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity"/>
     </entity>
     <entity name="SpokenLanguageEntity" representedClassName="SpokenLanguageEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
