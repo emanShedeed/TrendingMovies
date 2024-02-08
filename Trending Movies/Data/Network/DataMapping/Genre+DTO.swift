@@ -19,3 +19,9 @@ extension GenreDTO {
         return entity
     }
 }
+
+extension GenreDTO {
+    func toDomain() -> Genre {
+        return Genre(id: self.id, name: self.name)
+    }
+}

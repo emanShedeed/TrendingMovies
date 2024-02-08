@@ -7,7 +7,7 @@
 
 import CoreData
 
-struct MovieDetailsDTO {
+struct MovieDetailsDTO : Decodable{
     let id: Int
     let title: String
     let budget: Int?

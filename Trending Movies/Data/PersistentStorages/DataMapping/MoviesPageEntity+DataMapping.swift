@@ -22,7 +22,7 @@ extension MoviesPageEntity {
 
         // Iterating over each movie summary to construct MoviePageDTO
         for movieSummary in movieSummaries {
-            var movieSummariesDTO: [MoviePageDTO.MovieSummary] = []
+            var movieSummariesDTO: [MoviePageDTO.MovieSummaryDTO] = []
 
             // Extracting data from each MovieSummaryEntity
             let movieId = Int(movieSummary.id)
@@ -35,7 +35,7 @@ extension MoviesPageEntity {
 
 
             // Constructing MovieSummary DTO
-            let movieSummaryDTO = MoviePageDTO.MovieSummary(id: movieId,
+            let movieSummaryDTO = MoviePageDTO.MovieSummaryDTO(id: movieId,
                                                              title: title,
                                                              posterPath: posterPath,
                                                              releaseDate: releaseDate,

@@ -7,12 +7,12 @@
 
 import CoreData
 
-struct MoviePageDTO {
+struct MoviePageDTO:Decodable {
     let page: Int
     let totalPages: Int
-    let movies: [MovieSummary]
+    let movies: [MovieSummaryDTO]
 
-    struct MovieSummary {
+    struct MovieSummaryDTO:Decodable {
         let id: Int
         let title: String
         let posterPath: String?
@@ -28,7 +28,7 @@ struct MoviePageDTO {
         }
     }
 
-    init(page: Int, totalPages: Int, movies: [MovieSummary]) {
+    init(page: Int, totalPages: Int, movies: [MovieSummaryDTO]) {
         self.page = page
         self.totalPages = totalPages
         self.movies = movies
@@ -41,8 +41,8 @@ extension MoviePageDTO {
         moviesPageEntity.page = Int32(self.page)
         moviesPageEntity.totalPages = Int32(self.totalPages)
         
-        let movieSummaryEntities = self.movies.map { movieSummary in
-            return movieSummary.toEntity(context: context)
+        let movieSummaryEntities = self.movies.map { movieSummaryDTO in
+            return movieSummaryDTO.toEntity(context: context)
         }
         moviesPageEntity.movies = NSSet(array: movieSummaryEntities)
         
@@ -50,7 +50,7 @@ extension MoviePageDTO {
     }
 }
 
-extension MoviePageDTO.MovieSummary {
+extension MoviePageDTO.MovieSummaryDTO {
     func toEntity(context: NSManagedObjectContext) -> MovieSummaryEntity {
         let movieSummaryEntity = MovieSummaryEntity(context: context)
         movieSummaryEntity.id = Int32(self.id)
@@ -66,3 +66,20 @@ extension MoviePageDTO.MovieSummary {
     }
 }
 
+
+extension MoviePageDTO {
+    func toDomain() -> MoviesPage {
+        let domainMovies = movies.map { $0.toDomain() }
+        return MoviesPage(page: page, totalPages: totalPages, movies: domainMovies)
+    }
+}
+
+extension MoviePageDTO.MovieSummaryDTO {
+    func toDomain() -> MovieSummary {
+        return MovieSummary(id: id,
+                     title: title,
+                     posterPath: posterPath,
+                     releaseDate: releaseDate,
+                     genreIds: genreIds)
+    }
+}
