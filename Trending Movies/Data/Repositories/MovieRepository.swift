@@ -7,10 +7,9 @@
 
 import CoreData
 import RxSwift
-
 // Protocol for Movie Repository
 protocol MovieRepositoryProtocol {
-    func fetchMovies(page: Int) -> Observable<[MoviePageDTO]>
+    func fetchMovies(page: Int) -> Observable<MoviePageDTO>
 }
 
 // Offline Movie Repository
@@ -21,7 +20,7 @@ class OfflineMovieRepository: MovieRepositoryProtocol {
         self.persistentContainer = persistentContainer
     }
 
-    func fetchMovies(page: Int) -> Observable<[MoviePageDTO]> {
+    func fetchMovies(page: Int) -> Observable<MoviePageDTO> {
         return Observable.create { observer in
             let context = self.persistentContainer.viewContext
 
@@ -31,16 +30,24 @@ class OfflineMovieRepository: MovieRepositoryProtocol {
             do {
                 let results = try context.fetch(fetchRequest)
                 if let moviesPageEntity = results.first {
-                    let moviePageDTO = moviesPageEntity.toDTO()
-                    observer.onNext(moviePageDTO)
+                    if let moviePageDTO = moviesPageEntity.toDTO() {
+                        observer.onNext(moviePageDTO)
+                    } else {
+                        // Print a failure message
+                        print("Failed to fetch data from CoreData even though the page exists")
+                        
+                        // Return CoreDataError
+                        observer.onError(CoreDataError.fetchFailed)
+                    }
                     observer.onCompleted()
                 } else {
                     // Page does not exist locally, fetch from online
                     let onlineRepository = OnlineMovieRepository()
                     onlineRepository.fetchMovies(page: page)
-                        .subscribe(onNext: { moviePageDTOs in
-                            self.saveMoviesPageToCoreData(moviePageDTOs, context: context)
-                            observer.onNext(moviePageDTOs)
+                        .subscribe(onNext: { moviePageDTO in
+                            // Save the fetched movie page to CoreData
+                            self.saveMoviesPageToCoreData(moviePageDTO, context: context)
+                            observer.onNext(moviePageDTO)
                             observer.onCompleted()
                         }, onError: { error in
                             observer.onError(error)
@@ -55,25 +62,25 @@ class OfflineMovieRepository: MovieRepositoryProtocol {
         }
     }
 
-    private func saveMoviesPageToCoreData(_ moviePageDTOs: [MoviePageDTO], context: NSManagedObjectContext) {
-        for moviePageDTO in moviePageDTOs {
-            let moviesPageEntity = moviePageDTO.toEntity(context: context)
-            do {
-                try context.save()
-            } catch {
-                print("Failed to save data to CoreData: \(error)")
-            }
+
+    private func saveMoviesPageToCoreData(_ moviePageDTO: MoviePageDTO, context: NSManagedObjectContext) {
+        let moviesPageEntity = moviePageDTO.toEntity(context: context)
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save data to CoreData: \(error)")
         }
     }
 }
 
 // Online Movie Repository
 class OnlineMovieRepository: MovieRepositoryProtocol {
-    func fetchMovies(page: Int) -> Observable<[MoviePageDTO]> {
-        // Code to make API call and fetch movies data
-        // Example:
-        let moviePageDTO = MoviePageDTO(page: page, totalPages: 1, movies: [])
-        return Observable.just([moviePageDTO])
+    func fetchMovies(page: Int) -> Observable<MoviePageDTO> {
+
+       return MoviesAPIClient.fetchMovies(page: page)
     }
 }
-
+enum CoreDataError: Error {
+    case fetchFailed
+    // Add other Core Data-related errors as needed
+}

@@ -31,6 +31,7 @@ class NetworkManager: NetworkService {
         guard let url = try? router.asURLRequest().url else {
             return Observable.error(NetworkError.invalidURL)
         }
+        print(url.absoluteString)
 
         var request = URLRequest(url: url)
         request.httpMethod = router.method.rawValue

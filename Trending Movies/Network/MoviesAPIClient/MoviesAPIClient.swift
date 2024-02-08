@@ -9,12 +9,13 @@ import RxSwift
 
 class MoviesAPIClient {
     
-    static func fetchMovies(page: Int) -> Observable<[MoviePageDTO]> {
-        return NetworkManager().request(MoviesAPIRouter.fetchMovies(page: page), responseType: [MoviePageDTO].self)
+    static func fetchMovies(page: Int) -> Observable<MoviePageDTO> {
+        return NetworkManager().request(MoviesAPIRouter.fetchMovies(page: page), responseType: MoviePageDTO.self)
     }
  
-    
-}
+    static func fetchGenres() -> Observable<[GenreDTO]> {
+        return NetworkManager().request(MoviesAPIRouter.fetchGenres, responseType: [GenreDTO].self)
+    }}
 
 
 fileprivate enum MoviesAPIRouter : RouterRequestConvertible
@@ -26,12 +27,11 @@ fileprivate enum MoviesAPIRouter : RouterRequestConvertible
     
     
     case fetchMovies(page: Int)
-
-
+    case fetchGenres
     
     var method: HTTPMethod {
         switch self {
-        case .fetchMovies:
+        case .fetchMovies, .fetchGenres:
             return .get
         }
     }
@@ -40,6 +40,8 @@ fileprivate enum MoviesAPIRouter : RouterRequestConvertible
         switch self {
         case .fetchMovies(let pageNo):
             return APIs.Movies.fetchMovies(pageNo: "\(pageNo)")
+        case .fetchGenres:
+            return APIs.Movies.fetchGenres
         }
     }
     

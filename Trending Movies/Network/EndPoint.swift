@@ -16,11 +16,14 @@ struct APIs {
         
         case fetchMovies(pageNo:String)
         //case fetc÷hProductById(id: String)
+        case fetchGenres
       
         var subdomain: String{
             switch self {
             case .fetchMovies:
                 return "discover/movie"
+            case .fetchGenres:
+                return "genre/movie/list"
     
             }
         }
@@ -28,6 +31,8 @@ struct APIs {
             switch self {
             case .fetchMovies(let pageNo):
                  return "/page/\(pageNo)/"
+            case .fetchGenres:
+                return ""
          
             }
         }
