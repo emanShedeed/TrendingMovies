@@ -26,7 +26,20 @@ struct MoviePageDTO:Decodable {
             self.releaseDate = releaseDate
             self.genreIds = genreIds
         }
-    }
+        static func formatReleaseDate(_ releaseDate: String?) -> String? {
+            guard let releaseDate = releaseDate else { return nil }
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+
+            if let date = dateFormatter.date(from: releaseDate) {
+                dateFormatter.dateFormat = "yyyy"
+                return dateFormatter.string(from: date)
+            }
+
+            return nil
+        }    }
 
     init(page: Int, totalPages: Int, movies: [MovieSummaryDTO]) {
         self.page = page

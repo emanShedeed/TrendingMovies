@@ -38,6 +38,18 @@ struct APIs {
         }
 
     }
-    
+    enum Images: EndPoint {
+ 
+        case fetchImageData
+
+           var subdomain: String {
+               return ""
+           }
+
+           var path: String {
+               return ""
+           }
+
+    }
 }
 

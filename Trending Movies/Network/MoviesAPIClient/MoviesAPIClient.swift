@@ -12,10 +12,11 @@ class MoviesAPIClient {
     static func fetchMovies(page: Int) -> Observable<MoviePageDTO> {
         return NetworkManager().request(MoviesAPIRouter.fetchMovies(page: page), responseType: MoviePageDTO.self)
     }
- 
+    
     static func fetchGenres() -> Observable<[GenreDTO]> {
         return NetworkManager().request(MoviesAPIRouter.fetchGenres, responseType: [GenreDTO].self)
-    }}
+    }
+}
 
 
 fileprivate enum MoviesAPIRouter : RouterRequestConvertible
