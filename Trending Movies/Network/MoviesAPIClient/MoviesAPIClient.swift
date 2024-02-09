@@ -11,7 +11,8 @@ import Foundation
 class MoviesAPIClient {
     
     static func fetchMovies(page: Int) -> Observable<MoviePageDTO> {
-        return NetworkManager().request(MoviesAPIRouter.fetchMovies(page: page), responseType: MoviePageDTO.self)
+        return  NetworkManager().request(MoviesAPIRouter.fetchMovies(page: page), responseType: MoviePageDTO.self)
+       
     }
     
     static func fetchGenres() -> Observable<GenreListDTO> {

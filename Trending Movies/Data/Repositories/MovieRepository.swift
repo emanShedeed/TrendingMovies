@@ -25,6 +25,8 @@ class OfflineMovieRepository: MovieRepositoryProtocol {
     }
 
     func fetchMovies(page: Int) -> Observable<MoviePageDTO> {
+        let onlineRepository = OnlineMovieRepository() // Create an instance of OnlineMovieRepository
+        
         return Observable.create { observer in
             self.coreDataStorage.performBackgroundTask { context in
                 let fetchRequest: NSFetchRequest<MoviesPageEntity> = MoviesPageEntity.fetchRequest()
@@ -32,30 +34,12 @@ class OfflineMovieRepository: MovieRepositoryProtocol {
 
                 do {
                     let results = try context.fetch(fetchRequest)
-                    if let moviesPageEntity = results.first {
-                        if let moviePageDTO = moviesPageEntity.toDTO() {
-                            observer.onNext(moviePageDTO)
-                        } else {
-                            // Print a failure message
-                            print("Failed to fetch data from CoreData even though the page exists")
-                            
-                            // Return CoreDataError
-                            observer.onError(CoreDataStorageError.readError)
-                        }
+                    if let moviesPageEntity = results.first, let moviePageDTO = moviesPageEntity.toDTO() {
+                        observer.onNext(moviePageDTO)
                         observer.onCompleted()
                     } else {
-                        // Page does not exist locally, fetch from online
-                        let onlineRepository = OnlineMovieRepository()
-                        onlineRepository.fetchMovies(page: page)
-                            .subscribe(onNext: { moviePageDTO in
-                                // Save the fetched movie page to CoreData
-                                self.saveMoviesPageToCoreData(moviePageDTO, context: context)
-                                observer.onNext(moviePageDTO)
-                                observer.onCompleted()
-                            }, onError: { error in
-                                observer.onError(error)
-                            })
-                            .disposed(by: DisposeBag())
+                        print("No data found locally for page \(page)")
+                        observer.onError(CoreDataStorageError.readError) // Signal error if no data found locally
                     }
                 } catch {
                     observer.onError(error)
@@ -64,7 +48,24 @@ class OfflineMovieRepository: MovieRepositoryProtocol {
 
             return Disposables.create()
         }
+        .catch { error in // Handle the error here
+            guard let coreDataError = error as? CoreDataStorageError, coreDataError == .readError else {
+                return Observable.error(error) // Pass through other errors
+            }
+            
+            // Fetch movies from the online repository
+            return onlineRepository.fetchMovies(page: page)
+                .do(onNext: { [weak self] moviePageDTO in
+                    guard let self = self else { return }
+                    self.coreDataStorage.performBackgroundTask { context in
+                        self.saveMoviesPageToCoreData(moviePageDTO, context: context)
+                    }
+                })
+        }
     }
+
+
+
 
     private func saveMoviesPageToCoreData(_ moviePageDTO: MoviePageDTO, context: NSManagedObjectContext) {
         context.perform {

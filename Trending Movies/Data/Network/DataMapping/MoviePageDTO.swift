@@ -54,14 +54,16 @@ extension MoviePageDTO {
         moviesPageEntity.page = Int32(self.page)
         moviesPageEntity.totalPages = Int32(self.totalPages)
         
+        // Convert each MovieSummaryDTO to MovieSummaryEntity
         let movieSummaryEntities = self.results.map { movieSummaryDTO in
             return movieSummaryDTO.toEntity(context: context)
         }
-        moviesPageEntity.movies = NSSet(array: movieSummaryEntities)
+        moviesPageEntity.addToMoviesSummary(NSSet(array: movieSummaryEntities))
         
         return moviesPageEntity
     }
 }
+
 
 extension MoviePageDTO.MovieSummaryDTO {
     func toEntity(context: NSManagedObjectContext) -> MovieSummaryEntity {
@@ -70,13 +72,21 @@ extension MoviePageDTO.MovieSummaryDTO {
         movieSummaryEntity.title = self.title
         movieSummaryEntity.posterPath = self.posterPath
         movieSummaryEntity.releaseDate = self.releaseDate
-        
-        // Convert genreIds array to NSSet
-        let genreIdsNSSet: NSSet = NSSet(array: self.genreIds.map { NSNumber(value: $0) })
-        movieSummaryEntity.genreIds = genreIdsNSSet
-        
+
+        // Map genreIds to GenreEntity instances
+        let genreEntities = self.genreIds.map { genreId in
+            let genreEntity = GenreEntity(context: context)
+            genreEntity.id = Int32(genreId)
+            genreEntity.name = "xx"
+            return genreEntity
+        }
+
+        // Set up the relationship
+        movieSummaryEntity.genreIds = NSSet(array: genreEntities)
+
         return movieSummaryEntity
     }
+
 }
 
 

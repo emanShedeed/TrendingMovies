@@ -44,23 +44,29 @@ class MoviesListViewModel: MoviesListViewModelProtocol {
         }
         
         movieService.fetchMovies(page: page)
-            .subscribe(onNext: { [weak self] moviePage in
-                guard let self = self else { return }
-                if page == 1 {
-                    // Clear existing movies if fetching the first page
-                    self.movies.accept(moviePage.results)
-                } else {
-                    // Append new movies to the existing list
-                    self.movies.accept(self.movies.value + moviePage.results)
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onNext: { [weak self] moviePage in
+                    guard let self = self else { return }
+                    if page == 1 {
+                        // Clear existing movies if fetching the first page
+                        self.movies.accept(moviePage.results)
+                    } else {
+                        // Append new movies to the existing list
+                        self.movies.accept(self.movies.value + moviePage.results)
+                    }
+                    self.currentPage = moviePage.page
+                    self.totalPages = moviePage.totalPages
+                },
+                onError: { error in
+                    // Handle error
+                },
+                onCompleted: {
+                    // Handle completion if needed
                 }
-                self.currentPage = moviePage.page
-                self.totalPages = moviePage.totalPages
-            }, onError: { error in
-                // Handle error
-            })
+            )
             .disposed(by: disposeBag)
     }
-    
     func fetchGenres() {
         genreService.fetchGenres()
             .subscribe(onNext: { [weak self] genreList in

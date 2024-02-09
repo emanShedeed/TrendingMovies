@@ -7,18 +7,29 @@
 
 import CoreData
 
-enum CoreDataStorageError: Error {
+enum CoreDataStorageError: Error, Equatable {
     case readError
     case saveError(Error)
     case deleteError
-}
+    // Add other cases if needed
 
+    // Implement the Equatable protocol
+    static func ==(lhs: CoreDataStorageError, rhs: CoreDataStorageError) -> Bool {
+        switch (lhs, rhs) {
+        case (.readError, .readError):
+            return true
+        // Add cases for other error types if needed
+        default:
+            return false
+        }
+    }
+}
 final class CoreDataStorage {
 
     static let shared = CoreDataStorage()
     
     // MARK: - Core Data stack
-    private lazy var persistentContainer: NSPersistentContainer = {
+     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Trending_Movies")
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {

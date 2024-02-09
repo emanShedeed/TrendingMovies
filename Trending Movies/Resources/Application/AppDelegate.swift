@@ -28,7 +28,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
               window = UIWindow(frame: UIScreen.main.bounds)
               window?.rootViewController = navigationController
               window?.makeKeyAndVisible()
-        
+    
+     print("Path to store file: \(CoreDataStorage().persistentContainer.persistentStoreCoordinator.persistentStores.first?.url?.path ?? "not found")")
+
         return true
     }
 

@@ -3,7 +3,8 @@
     <entity name="GenreEntity" representedClassName=".GenreEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
-        <relationship name="movies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity"/>
+        <relationship name="movies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity" inverseName="genres" inverseEntity="MovieEntity"/>
+        <relationship name="movieSummary" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieSummaryEntity" inverseName="genreIds" inverseEntity="MovieSummaryEntity"/>
     </entity>
     <entity name="MovieEntity" representedClassName=".MovieEntity" syncable="YES" codeGenerationType="class">
         <attribute name="budget" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -16,21 +17,22 @@
         <attribute name="runtime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="status" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
-        <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity"/>
+        <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity" inverseName="movies" inverseEntity="GenreEntity"/>
         <relationship name="languages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SpokenLanguageEntity"/>
     </entity>
     <entity name="MoviesPageEntity" representedClassName=".MoviesPageEntity" syncable="YES" codeGenerationType="class">
         <attribute name="page" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="totalPages" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="moiesSummary" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieSummaryEntity"/>
-        <relationship name="movies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity"/>
+        <relationship name="movieDetails" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MovieEntity"/>
+        <relationship name="moviesSummary" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieSummaryEntity" inverseName="moviePage" inverseEntity="MovieSummaryEntity"/>
     </entity>
     <entity name="MovieSummaryEntity" representedClassName="MovieSummaryEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="posterPath" optional="YES" attributeType="String"/>
         <attribute name="releaseDate" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
-        <relationship name="genreIds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity"/>
+        <relationship name="genreIds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity" inverseName="movieSummary" inverseEntity="GenreEntity"/>
+        <relationship name="moviePage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MoviesPageEntity" inverseName="moviesSummary" inverseEntity="MoviesPageEntity"/>
     </entity>
     <entity name="SpokenLanguageEntity" representedClassName="SpokenLanguageEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>

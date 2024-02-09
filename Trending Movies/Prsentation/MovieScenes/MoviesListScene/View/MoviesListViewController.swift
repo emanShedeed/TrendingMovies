@@ -39,6 +39,7 @@ class MoviesListViewController: UIViewController {
         genreCollectionView = UICollectionView(frame: CGRect(x: 0, y: 100, width: view.frame.width, height: 50), collectionViewLayout: genreLayout)
         genreCollectionView.backgroundColor = .white
         genreCollectionView.showsHorizontalScrollIndicator = false
+        
         view.addSubview(genreCollectionView)
 
         // Set constraints for genre collection view
@@ -57,7 +58,7 @@ class MoviesListViewController: UIViewController {
         layout.minimumInteritemSpacing = 10
         layout.sectionInset = UIEdgeInsets(top: 160, left: 10, bottom: 10, right: 10)
         moviesCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        moviesCollectionView.backgroundColor = .white
+       
         view.addSubview(moviesCollectionView)
         
         // Set constraints for movie collection view
