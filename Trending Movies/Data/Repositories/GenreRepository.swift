@@ -8,72 +8,79 @@
 import RxSwift
 import CoreData
 
+// MARK: - Genre Repository Protocol
+
 protocol GenreRepositoryProtocol {
-    func fetchGenres() -> Observable<[GenreDTO]>
+    func fetchGenres() -> Observable<GenreListDTO>
 }
 
+// MARK: - Online Genre Repository
 
 class OnlineGenreRepository: GenreRepositoryProtocol {
-    func fetchGenres() -> Observable<[GenreDTO]> {
-        // Implement logic to fetch genres from online source (API) and return Observable
-        fatalError("Not implemented")
+    func fetchGenres() -> Observable<GenreListDTO> {
+        return MoviesAPIClient.fetchGenres()
     }
 }
+
+// MARK: - Offline Genre Repository
 
 class OfflineGenreRepository: GenreRepositoryProtocol {
-    let persistentContainer: NSPersistentContainer
+    let coreDataStorage: CoreDataStorage
 
-    init(persistentContainer: NSPersistentContainer) {
-        self.persistentContainer = persistentContainer
+    init(coreDataStorage: CoreDataStorage = CoreDataStorage.shared) {
+        self.coreDataStorage = coreDataStorage
     }
 
-    func fetchGenres() -> Observable<[GenreDTO]> {
-        return Observable.create { observer in
-            let context = self.persistentContainer.viewContext
+    func fetchGenres() -> Observable<GenreListDTO> {
+           return Observable.create { observer in
+               self.coreDataStorage.performBackgroundTask { context in
+                   let fetchRequest: NSFetchRequest<GenreEntity> = GenreEntity.fetchRequest()
 
-            let fetchRequest: NSFetchRequest<GenreEntity> = GenreEntity.fetchRequest()
+                   do {
+                       let genres = try context.fetch(fetchRequest)
+                       if !genres.isEmpty {
+                           let genreDTOs = genres.map { $0.toDTO() }
+                           let genreListDTO = GenreListDTO(genres: genreDTOs)
+                           observer.onNext(genreListDTO)
+                           observer.onCompleted()
+                       } else {
+                           // Fetch from online repository if local data is empty
+                           let onlineRepository = OnlineGenreRepository()
+                           onlineRepository.fetchGenres()
+                               .subscribe(onNext: { genreList in
+                                   // Save genres to CoreData
+                                   self.saveGenresToCoreData(genreList.genres, context: context)
+                                 
+                                   observer.onNext(genreList)
+                                   observer.onCompleted()
+                               }, onError: { error in
+                                   observer.onError(error)
+                               })
+                               .disposed(by: DisposeBag())
+                       }
+                   } catch {
+                       observer.onError(error)
+                   }
+               }
+               return Disposables.create()
+           }
+       }
 
-            do {
-                let genres = try context.fetch(fetchRequest)
-                if !genres.isEmpty {
-                    let genreDTOs = genres.map { $0.toDTO() }
-                    observer.onNext(genreDTOs)
-                    observer.onCompleted()
-                } else {
-                    // Fetch from online repository if local data is empty
-                    let onlineRepository = OnlineGenreRepository()
-                    onlineRepository.fetchGenres()
-                        .subscribe(onNext: { genreDTOs in
-                            self.saveGenresToCoreData(genreDTOs)
-                            observer.onNext(genreDTOs)
-                            observer.onCompleted()
-                        }, onError: { error in
-                            observer.onError(error)
-                        })
-                        .disposed(by: DisposeBag())
-                }
-            } catch {
-                observer.onError(error)
-            }
 
-            return Disposables.create()
-        }
-    }
+    private func saveGenresToCoreData(_ genreDTOs: [GenreDTO], context: NSManagedObjectContext) {
+           context.perform {
+               for genreDTO in genreDTOs {
+                   let genreEntity = genreDTO.toEntity(context: context)
+                   // Save the genre entity
+               }
 
-    private func saveGenresToCoreData(_ genreDTOs: [GenreDTO]) {
-        let context = persistentContainer.newBackgroundContext()
-        context.perform {
-            for genreDTO in genreDTOs {
-                let genreEntity = genreDTO.toEntity(context: context)
-                // Save the genre entity
-            }
-
-            do {
-                try context.save()
-            } catch {
-                print("Failed to save genres to CoreData: \(error)")
-            }
-        }
-    }
+               do {
+                   try context.save()
+               } catch {
+                   // Handle the save error
+                                 
+                   print("Failed to save genres to CoreData: \(error)")
+               }
+           }
+       }
 }
-

@@ -10,7 +10,7 @@ import CoreData
 struct MoviePageDTO:Decodable {
     let page: Int
     let totalPages: Int
-    let movies: [MovieSummaryDTO]
+    let results: [MovieSummaryDTO]
 
     struct MovieSummaryDTO:Decodable {
         let id: Int
@@ -44,7 +44,7 @@ struct MoviePageDTO:Decodable {
     init(page: Int, totalPages: Int, movies: [MovieSummaryDTO]) {
         self.page = page
         self.totalPages = totalPages
-        self.movies = movies
+        self.results = movies
     }
 }
 
@@ -54,7 +54,7 @@ extension MoviePageDTO {
         moviesPageEntity.page = Int32(self.page)
         moviesPageEntity.totalPages = Int32(self.totalPages)
         
-        let movieSummaryEntities = self.movies.map { movieSummaryDTO in
+        let movieSummaryEntities = self.results.map { movieSummaryDTO in
             return movieSummaryDTO.toEntity(context: context)
         }
         moviesPageEntity.movies = NSSet(array: movieSummaryEntities)
@@ -82,7 +82,7 @@ extension MoviePageDTO.MovieSummaryDTO {
 
 extension MoviePageDTO {
     func toDomain() -> MoviesPage {
-        let domainMovies = movies.map { $0.toDomain() }
+        let domainMovies = results.map { $0.toDomain() }
         return MoviesPage(page: page, totalPages: totalPages, movies: domainMovies)
     }
 }

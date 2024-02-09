@@ -6,6 +6,7 @@
 //
 
 import RxSwift
+import Foundation
 
 class MoviesAPIClient {
     
@@ -13,21 +14,19 @@ class MoviesAPIClient {
         return NetworkManager().request(MoviesAPIRouter.fetchMovies(page: page), responseType: MoviePageDTO.self)
     }
     
-    static func fetchGenres() -> Observable<[GenreDTO]> {
-        return NetworkManager().request(MoviesAPIRouter.fetchGenres, responseType: [GenreDTO].self)
+    static func fetchGenres() -> Observable<GenreListDTO> {
+        return NetworkManager().request(MoviesAPIRouter.fetchGenres, responseType: GenreListDTO.self)
     }
 }
 
 
-fileprivate enum MoviesAPIRouter : RouterRequestConvertible
-    
-{
+fileprivate enum MoviesAPIRouter: RouterRequestConvertible {
+   
     var environment: Environment {
         .development
     }
     
-    
-    case fetchMovies(page: Int)
+    case fetchMovies(page: Int, sortBy: String = "popularity.desc", includeAdult: Bool = false)
     case fetchGenres
     
     var method: HTTPMethod {
@@ -39,8 +38,9 @@ fileprivate enum MoviesAPIRouter : RouterRequestConvertible
     
     var endPoint: EndPoint {
         switch self {
-        case .fetchMovies(let pageNo):
-            return APIs.Movies.fetchMovies(pageNo: "\(pageNo)")
+        case .fetchMovies(let page, _, _):
+            return APIs.Movies.fetchMovies(pageNo: "\(page)")
+            
         case .fetchGenres:
             return APIs.Movies.fetchGenres
         }
@@ -48,29 +48,26 @@ fileprivate enum MoviesAPIRouter : RouterRequestConvertible
     
     var queryItems: QueryItems? {
         switch self {
+        case .fetchMovies(let page, let sortBy, let includeAdult):
+            return [
+                "page": "\(page)",
+                "sort_by": sortBy,
+                "include_adult": "\(includeAdult)"
+            ]
         default:
             return nil
-
         }
-        
     }
     
     var headers: [String : String]? {
-        switch self {
-        default:
-            return nil
-        }
+        return nil
     }
     
     var parameters: Parameters? {
-        switch self {
-        default :
-            return nil
-            
-        }
+        return nil
     }
     
     struct Keys {
-        //        static let articleId = "id"
+        // Keys if any
     }
 }

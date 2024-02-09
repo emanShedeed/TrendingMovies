@@ -7,6 +7,9 @@
 
 import CoreData
 
+struct GenreListDTO: Decodable {
+    let genres: [GenreDTO]
+}
 struct GenreDTO: Decodable {
     let id: Int
     let name: String

@@ -29,8 +29,8 @@ struct APIs {
         }
         var path: String {
             switch self {
-            case .fetchMovies(let pageNo):
-                 return "/page/\(pageNo)/"
+            case .fetchMovies:
+                 return ""
             case .fetchGenres:
                 return ""
          
