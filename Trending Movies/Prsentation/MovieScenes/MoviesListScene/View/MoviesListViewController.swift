@@ -10,6 +10,9 @@ import RxSwift
 // MARK: - View Controller: MoviesListViewController
 
 class MoviesListViewController: UIViewController {
+    private let searchBar = UISearchBar()
+    private let titleLabel = UILabel()
+
     private var moviesCollectionView: UICollectionView!
     private var genreCollectionView: UICollectionView!
     private let viewModel: MoviesListViewModelProtocol
@@ -27,12 +30,27 @@ class MoviesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupSearchBar()
         bindViewModel()
     }
 
     private func setupUI() {
         view.backgroundColor = .black
-        // Setup genre collection view
+        // Setup title label
+               titleLabel.text = "Watch New Movies"
+               titleLabel.textColor = .yellow
+               titleLabel.font = UIFont.systemFont(ofSize: 40, weight: .bold)
+               view.addSubview(titleLabel)
+               
+               // Set constraints for title label
+               titleLabel.translatesAutoresizingMaskIntoConstraints = false
+               NSLayoutConstraint.activate([
+                   titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+                   titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                   titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+               ])
+        
+    // Setup genre collection view
         let genreLayout = UICollectionViewFlowLayout()
         genreLayout.scrollDirection = .horizontal
         genreLayout.itemSize = CGSize(width: 100, height: 30)
@@ -45,7 +63,7 @@ class MoviesListViewController: UIViewController {
         // Set constraints for genre collection view
            genreCollectionView.translatesAutoresizingMaskIntoConstraints = false
            NSLayoutConstraint.activate([
-               genreCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20), // Position at the top of the view
+               genreCollectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
                genreCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                genreCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                genreCollectionView.heightAnchor.constraint(equalToConstant: 60) // Set a fixed height
@@ -133,5 +151,29 @@ extension MoviesListViewController: UICollectionViewDelegateFlowLayout {
             // Adjust item size based on your requirements
             return CGSize(width: collectionView.frame.width / 2 - 5, height: 250)
         }
+    }
+}
+
+// MARK: - UISearchBarDelegate: MoviesListViewController
+extension MoviesListViewController: UISearchBarDelegate {
+    private func setupSearchBar() {
+      
+        searchBar.placeholder = "Search TMDB"
+        
+        searchBar.barStyle = .black
+
+
+        searchBar.delegate = self
+        navigationItem.titleView = searchBar
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchText = searchBar.text, !searchText.isEmpty else {
+            // Handle empty search text
+            return
+        }
+        
+        // Perform search using searchText
+        viewModel.searchMovies(query: searchText)
     }
 }

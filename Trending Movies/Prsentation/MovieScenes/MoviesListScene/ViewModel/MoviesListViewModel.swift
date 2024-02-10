@@ -14,9 +14,10 @@ protocol MoviesListViewModelProtocol {
     var genres: BehaviorRelay<[GenreDTO]> { get }
     var movies: BehaviorRelay<[MoviePageDTO.MovieSummaryDTO]> { get }
     var currentPage: Int { get }
-
+    
     func fetchMovies(page: Int)
     func fetchGenres()
+    func searchMovies(query: String)
 }
 
 // MARK: - View Model: MoviesListViewModel
@@ -75,5 +76,8 @@ class MoviesListViewModel: MoviesListViewModelProtocol {
                 // Handle error
             })
             .disposed(by: disposeBag)
+    }
+    func searchMovies(query: String) {
+        // to be implemented
     }
 }
