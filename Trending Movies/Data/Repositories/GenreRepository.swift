@@ -32,39 +32,42 @@ class OfflineGenreRepository: GenreRepositoryProtocol {
     }
 
     func fetchGenres() -> Observable<GenreListDTO> {
-           return Observable.create { observer in
-               self.coreDataStorage.performBackgroundTask { context in
-                   let fetchRequest: NSFetchRequest<GenreEntity> = GenreEntity.fetchRequest()
+        let onlineRepository = OnlineGenreRepository() // Create an instance of OnlineGenreRepository
+        
+        return Observable.create { observer in
+            self.coreDataStorage.performBackgroundTask { context in
+                let fetchRequest: NSFetchRequest<GenreEntity> = GenreEntity.fetchRequest()
 
-                   do {
-                       let genres = try context.fetch(fetchRequest)
-                       if !genres.isEmpty {
-                           let genreDTOs = genres.map { $0.toDTO() }
-                           let genreListDTO = GenreListDTO(genres: genreDTOs)
-                           observer.onNext(genreListDTO)
-                           observer.onCompleted()
-                       } else {
-                           // Fetch from online repository if local data is empty
-                           let onlineRepository = OnlineGenreRepository()
-                           onlineRepository.fetchGenres()
-                               .subscribe(onNext: { genreList in
-                                   // Save genres to CoreData
-                                   self.saveGenresToCoreData(genreList.genres, context: context)
-                                 
-                                   observer.onNext(genreList)
-                                   observer.onCompleted()
-                               }, onError: { error in
-                                   observer.onError(error)
-                               })
-                               .disposed(by: DisposeBag())
-                       }
-                   } catch {
-                       observer.onError(error)
-                   }
-               }
-               return Disposables.create()
-           }
-       }
+                do {
+                    let genres = try context.fetch(fetchRequest)
+                    if !genres.isEmpty {
+                        let genreDTOs = genres.map { $0.toDTO() }
+                        let genreListDTO = GenreListDTO(genres: genreDTOs)
+                        observer.onNext(genreListDTO)
+                        observer.onCompleted()
+                    } else {
+                        print("No data found locally for page ")
+                        observer.onError(CoreDataStorageError.readError)
+                    }
+                } catch {
+                    observer.onError(error)
+                }
+            }
+            
+            return Disposables.create()
+        }
+        .catch { error in // Handle the error here
+            // Fetch genres from the online repository
+            return onlineRepository.fetchGenres()
+                .do(onNext: { [weak self] genreList in
+                    guard let self = self else { return }
+                    self.coreDataStorage.performBackgroundTask { context in
+                        self.saveGenresToCoreData(genreList.genres, context: context)
+                    }
+                })
+        }
+    }
+
 
 
     private func saveGenresToCoreData(_ genreDTOs: [GenreDTO], context: NSManagedObjectContext) {

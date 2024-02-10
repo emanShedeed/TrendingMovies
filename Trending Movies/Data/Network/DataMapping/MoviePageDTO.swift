@@ -75,9 +75,8 @@ extension MoviePageDTO.MovieSummaryDTO {
 
         // Map genreIds to GenreEntity instances
         let genreEntities = self.genreIds.map { genreId in
-            let genreEntity = GenreEntity(context: context)
+            let genreEntity = GenresIDEntity(context: context)
             genreEntity.id = Int32(genreId)
-            genreEntity.name = "xx"
             return genreEntity
         }
 

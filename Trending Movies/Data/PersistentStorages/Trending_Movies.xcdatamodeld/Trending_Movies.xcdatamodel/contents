@@ -4,7 +4,11 @@
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
         <relationship name="movies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity" inverseName="genres" inverseEntity="MovieEntity"/>
-        <relationship name="movieSummary" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieSummaryEntity" inverseName="genreIds" inverseEntity="MovieSummaryEntity"/>
+        <relationship name="movieSummary" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieSummaryEntity"/>
+    </entity>
+    <entity name="GenresIDEntity" representedClassName=".GenresIDEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="genreMovies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieSummaryEntity" inverseName="genreIds" inverseEntity="MovieSummaryEntity"/>
     </entity>
     <entity name="MovieEntity" representedClassName=".MovieEntity" syncable="YES" codeGenerationType="class">
         <attribute name="budget" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -31,7 +35,7 @@
         <attribute name="posterPath" optional="YES" attributeType="String"/>
         <attribute name="releaseDate" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
-        <relationship name="genreIds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity" inverseName="movieSummary" inverseEntity="GenreEntity"/>
+        <relationship name="genreIds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenresIDEntity" inverseName="genreMovies" inverseEntity="GenresIDEntity"/>
         <relationship name="moviePage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MoviesPageEntity" inverseName="moviesSummary" inverseEntity="MoviesPageEntity"/>
     </entity>
     <entity name="SpokenLanguageEntity" representedClassName="SpokenLanguageEntity" syncable="YES" codeGenerationType="class">
