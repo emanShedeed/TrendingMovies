@@ -214,6 +214,7 @@ extension MoviesListViewController: UISearchBarDelegate {
       if searchText.isEmpty {
           searahBarText = nil
            handleFetchingMovies()
+          searchBar.resignFirstResponder()
         }
     }
 }
