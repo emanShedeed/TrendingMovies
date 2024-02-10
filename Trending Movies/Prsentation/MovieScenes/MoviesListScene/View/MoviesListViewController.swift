@@ -59,6 +59,7 @@ class MoviesListViewController: UIViewController {
         genreLayout.itemSize = CGSize(width: 100, height: 30)
         genreCollectionView = UICollectionView(frame: CGRect(x: 0, y: 100, width: view.frame.width, height: 50), collectionViewLayout: genreLayout)
         genreCollectionView.backgroundColor = .black
+        genreCollectionView.allowsMultipleSelection = true
         genreCollectionView.showsHorizontalScrollIndicator = false
         
         view.addSubview(genreCollectionView)
@@ -163,7 +164,16 @@ extension MoviesListViewController: UICollectionViewDelegate {
         
        }
    }
-    
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        if collectionView == genreCollectionView {
+            if let indexPaths = collectionView.indexPathsForSelectedItems, indexPaths.contains(indexPath) {
+                collectionView.deselectItem(at: indexPath, animated: true)
+                return false
+            }
+        }
+            return true
+        
+    }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
