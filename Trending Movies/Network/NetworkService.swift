@@ -109,6 +109,39 @@ class NetworkManager: NetworkService {
         }
     }
 
+    func fetchImageData(url: URL) -> Observable<Data> {
+        return Observable.create { observer in
+            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                // Handle the response, data, and error here
+                if let error = error {
+                    observer.onError(error)
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    observer.onError(NetworkError.invalidResponse)
+                    return
+                }
+                
+                guard 200..<300 ~= httpResponse.statusCode else {
+                    observer.onError(NetworkError.invalidResponse)
+                    return
+                }
+                
+                guard let imageData = data else {
+                    observer.onError(NetworkError.noData)
+                    return
+                }
+                
+                observer.onNext(imageData)
+                observer.onCompleted()
+            }
+            
+            task.resume()
+            
+            return Disposables.create()
+        }
+    }
 
 }
 
