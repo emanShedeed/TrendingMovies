@@ -31,13 +31,13 @@ class MoviesListViewController: UIViewController {
     }
 
     private func setupUI() {
-        view.backgroundColor = .yellow
+        view.backgroundColor = .black
         // Setup genre collection view
         let genreLayout = UICollectionViewFlowLayout()
         genreLayout.scrollDirection = .horizontal
         genreLayout.itemSize = CGSize(width: 100, height: 30)
         genreCollectionView = UICollectionView(frame: CGRect(x: 0, y: 100, width: view.frame.width, height: 50), collectionViewLayout: genreLayout)
-        genreCollectionView.backgroundColor = .white
+        genreCollectionView.backgroundColor = .black
         genreCollectionView.showsHorizontalScrollIndicator = false
         
         view.addSubview(genreCollectionView)
@@ -45,10 +45,10 @@ class MoviesListViewController: UIViewController {
         // Set constraints for genre collection view
            genreCollectionView.translatesAutoresizingMaskIntoConstraints = false
            NSLayoutConstraint.activate([
-               genreCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor), // Position at the top of the view
+               genreCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20), // Position at the top of the view
                genreCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                genreCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-               genreCollectionView.heightAnchor.constraint(equalToConstant: 50) // Set a fixed height
+               genreCollectionView.heightAnchor.constraint(equalToConstant: 60) // Set a fixed height
            ])
 
         // Setup main collection view
@@ -56,15 +56,15 @@ class MoviesListViewController: UIViewController {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
-        layout.sectionInset = UIEdgeInsets(top: 160, left: 10, bottom: 10, right: 10)
+        layout.sectionInset = .zero
         moviesCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-       
+        moviesCollectionView.backgroundColor = .black
         view.addSubview(moviesCollectionView)
         
         // Set constraints for movie collection view
           moviesCollectionView.translatesAutoresizingMaskIntoConstraints = false
           NSLayoutConstraint.activate([
-              moviesCollectionView.topAnchor.constraint(equalTo: genreCollectionView.bottomAnchor), // Position below the genre collection view
+            moviesCollectionView.topAnchor.constraint(equalTo: genreCollectionView.bottomAnchor, constant: 40), // Position below the genre collection view
               moviesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
               moviesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
               moviesCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -91,7 +91,7 @@ class MoviesListViewController: UIViewController {
         viewModel.genres
             .bind(to: genreCollectionView.rx.items(cellIdentifier: "GenreCell", cellType: GenreCell.self)) { row, genre, cell in
                 let genreViewModel = GenreCellViewModel(genre: genre)
-                cell.bind(viewModel: genreViewModel)
+                cell.bind(viewModel: genreViewModel) 
             }
             .disposed(by: disposeBag)
 
@@ -128,10 +128,10 @@ extension MoviesListViewController: UICollectionViewDelegate {
 extension MoviesListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == genreCollectionView {
-            return CGSize(width: 100, height: 30)
+            return CGSize(width: 150, height: 30)
         } else {
             // Adjust item size based on your requirements
-            return CGSize(width: collectionView.frame.width / 2 - 15, height: 200)
+            return CGSize(width: collectionView.frame.width / 2 - 5, height: 250)
         }
     }
 }

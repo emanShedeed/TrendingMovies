@@ -25,15 +25,16 @@ class MovieCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.numberOfLines = 2
+        label.textColor = .white
         return label
     }()
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
-        label.textColor = .gray
+        label.textAlignment = .left
+        label.textColor = .white
         return label
     }()
 
@@ -61,6 +62,7 @@ class MovieCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(dateLabel)
+        contentView.backgroundColor = .blackPrimary
         
         // Set up constraints
         // imageView
