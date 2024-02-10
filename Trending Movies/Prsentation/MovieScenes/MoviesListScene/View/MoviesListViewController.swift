@@ -18,6 +18,9 @@ class MoviesListViewController: UIViewController {
     private let viewModel: MoviesListViewModelProtocol
     private let disposeBag = DisposeBag()
 
+    
+    private var serachbarText: String?
+    
     init(viewModel: MoviesListViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -125,9 +128,19 @@ class MoviesListViewController: UIViewController {
 // MARK: - CollectionView Delegate: MoviesListViewController
 
 extension MoviesListViewController: UICollectionViewDelegate {
+  
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Handle item selection
-    }
+           if collectionView == genreCollectionView {
+               // Fetch the selected genre cell view model
+               guard let selectedGenreViewModel = viewModel.genres.value[safe: indexPath.item] else {
+                   return
+               }
+               // Call the search movies method with the selected genre ID and empty search text
+               viewModel.searchMovies(query: serachbarText, genreId: selectedGenreViewModel.id)
+           }
+       }
+      
+    
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
@@ -144,6 +157,7 @@ extension MoviesListViewController: UICollectionViewDelegate {
 // MARK: - CollectionView FlowLayout Delegate: MoviesListViewController
 
 extension MoviesListViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == genreCollectionView {
             return CGSize(width: 150, height: 30)
@@ -168,12 +182,24 @@ extension MoviesListViewController: UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let searchText = searchBar.text, !searchText.isEmpty else {
-            // Handle empty search text
-            return
+            guard let searchText = searchBar.text, !searchText.isEmpty else {
+                // Handle empty search text
+                return
+            }
+        serachbarText = searchBar.text
+            // Fetch the selected genre index path from the collection view
+            guard let selectedIndexPath = genreCollectionView.indexPathsForSelectedItems?.first else {
+                // If no genre is selected, perform the search with an empty genre ID
+                viewModel.searchMovies(query: searchText, genreId: nil)
+                return
+            }
+            
+            // Fetch the selected genre cell view model
+            guard let selectedGenreViewModel = viewModel.genres.value[safe: selectedIndexPath.item] else {
+                return
+            }
+            
+            // Call the search movies method with the selected genre ID and search text
+            viewModel.searchMovies(query: searchText, genreId: selectedGenreViewModel.id)
         }
-        
-        // Perform search using searchText
-        viewModel.searchMovies(query: searchText)
-    }
 }

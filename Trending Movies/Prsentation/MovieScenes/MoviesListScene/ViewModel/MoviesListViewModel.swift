@@ -17,7 +17,7 @@ protocol MoviesListViewModelProtocol {
     
     func fetchMovies(page: Int)
     func fetchGenres()
-    func searchMovies(query: String)
+    func searchMovies(query: String?, genreId: Int?)
 }
 
 // MARK: - View Model: MoviesListViewModel
@@ -25,17 +25,20 @@ protocol MoviesListViewModelProtocol {
 class MoviesListViewModel: MoviesListViewModelProtocol {
     var genres: BehaviorRelay<[GenreDTO]> = BehaviorRelay(value: [])
     var movies: BehaviorRelay<[MoviePageDTO.MovieSummaryDTO]> = BehaviorRelay(value: [])
+    
     var currentPage: Int = 1
     var coordinator: MoviesListCoordinator?
     
     private let movieService: MovieRepositoryProtocol
+    private let searchMovieService: SearchMovieRepositoryProtocol
     private let genreService: GenreRepositoryProtocol
     private var totalPages: Int = 1
     private let disposeBag = DisposeBag()
     
-    init(movieService: MovieRepositoryProtocol, genreService: GenreRepositoryProtocol) {
+    init(movieService: MovieRepositoryProtocol, genreService: GenreRepositoryProtocol, searchMovieService: SearchMovieRepositoryProtocol) {
         self.movieService = movieService
         self.genreService = genreService
+        self.searchMovieService = searchMovieService
     }
     
     func fetchMovies(page: Int) {
@@ -77,7 +80,27 @@ class MoviesListViewModel: MoviesListViewModelProtocol {
             })
             .disposed(by: disposeBag)
     }
-    func searchMovies(query: String) {
-        // to be implemented
+    func searchMovies(query: String?, genreId: Int?) {
+        searchMovieService.searchMovie(by: query, genreId: genreId).observe(on: MainScheduler.instance)
+            .subscribe(
+                onNext: { [weak self] movies in
+                    guard let self = self else { return }
+                    self.resetPages()
+                    self.movies.accept( movies)
+                    
+                },
+                onError: { error in
+                    // Handle error
+                },
+                onCompleted: {
+                    // Handle completion if needed
+                }
+            )
+            .disposed(by: disposeBag)   
     }
-}
+    
+    private func resetPages() {
+        currentPage = 0
+        totalPages = 1
+        movies.accept([])
+    }}
