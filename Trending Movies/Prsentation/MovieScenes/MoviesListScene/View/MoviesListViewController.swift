@@ -131,6 +131,15 @@ extension MoviesListViewController: UICollectionViewDelegate {
   
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
            if collectionView == genreCollectionView {
+               guard let cell = collectionView.cellForItem(at: indexPath) as? GenreCell else {
+                          return
+                      }
+
+                      // Change cell background color to yellow
+                      cell.contentView.backgroundColor = .yellow
+
+                      // Change genre name label text color to black
+                      cell.genreNameLabel.textColor = .black
                // Fetch the selected genre cell view model
                guard let selectedGenreViewModel = viewModel.genres.value[safe: indexPath.item] else {
                    return
@@ -139,8 +148,21 @@ extension MoviesListViewController: UICollectionViewDelegate {
                viewModel.searchMovies(query: serachbarText, genreId: selectedGenreViewModel.id)
            }
        }
-      
     
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if collectionView == genreCollectionView {
+            guard let cell = collectionView.cellForItem(at: indexPath) as? GenreCell else {
+                return
+            }
+            
+            // Reset cell background color to default
+            cell.contentView.backgroundColor = .black
+            
+            // Reset genre name label text color to white
+            cell.genreNameLabel.textColor = .white
+        
+       }
+   }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
