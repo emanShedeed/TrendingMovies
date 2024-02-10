@@ -19,7 +19,7 @@ class MoviesListViewController: UIViewController {
     private let disposeBag = DisposeBag()
 
     
-    private var serachbarText: String?
+    private var searahBarText: String?
     
     init(viewModel: MoviesListViewModelProtocol) {
         self.viewModel = viewModel
@@ -136,17 +136,8 @@ extension MoviesListViewController: UICollectionViewDelegate {
                           return
                       }
 
-                      // Change cell background color to yellow
-                      cell.contentView.backgroundColor = .yellow
-
-                      // Change genre name label text color to black
-                      cell.genreNameLabel.textColor = .black
-               // Fetch the selected genre cell view model
-               guard let selectedGenreViewModel = viewModel.genres.value[safe: indexPath.item] else {
-                   return
-               }
-               // Call the search movies method with the selected genre ID and empty search text
-               viewModel.searchMovies(query: serachbarText, genreId: selectedGenreViewModel.id)
+                      cell.decorate()
+              handleFetchingMovies()
            }
        }
     
@@ -157,10 +148,8 @@ extension MoviesListViewController: UICollectionViewDelegate {
             }
             
             // Reset cell background color to default
-            cell.contentView.backgroundColor = .black
-            
-            // Reset genre name label text color to white
-            cell.genreNameLabel.textColor = .white
+            cell.resetUI()
+            handleFetchingMovies()
         
        }
    }
@@ -218,20 +207,35 @@ extension MoviesListViewController: UISearchBarDelegate {
                 // Handle empty search text
                 return
             }
-        serachbarText = searchBar.text
-            // Fetch the selected genre index path from the collection view
-            guard let selectedIndexPath = genreCollectionView.indexPathsForSelectedItems?.first else {
-                // If no genre is selected, perform the search with an empty genre ID
-                viewModel.searchMovies(query: searchText, genreId: nil)
-                return
-            }
-            
-            // Fetch the selected genre cell view model
-            guard let selectedGenreViewModel = viewModel.genres.value[safe: selectedIndexPath.item] else {
-                return
-            }
-            
-            // Call the search movies method with the selected genre ID and search text
-            viewModel.searchMovies(query: searchText, genreId: selectedGenreViewModel.id)
+        searahBarText = searchBar.text
+           handleFetchingMovies()
         }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+      if searchText.isEmpty {
+          searahBarText = nil
+           handleFetchingMovies()
+        }
+    }
+}
+private extension MoviesListViewController {
+    func handleFetchingMovies() {
+        if  genreCollectionView.indexPathsForSelectedItems?.first == nil && (searahBarText == nil || searahBarText?.count == 0) {
+            viewModel.fetchGenres()
+            viewModel.fetchMovies(page: 1)
+        }
+            // Fetch the selected genre index path from the collection view
+        guard let selectedIndexPath = genreCollectionView.indexPathsForSelectedItems?.first else {
+            // If no genre is selected, perform the search with an empty genre ID
+            viewModel.searchMovies(query: searahBarText, genreId: nil)
+            return
+        }
+        
+        // Fetch the selected genre cell view model
+        guard let selectedGenreViewModel = viewModel.genres.value[safe: selectedIndexPath.item] else {
+            return
+        }
+        
+        // Call the search movies method with the selected genre ID and search text
+        viewModel.searchMovies(query: searahBarText, genreId: selectedGenreViewModel.id)   
+    }
 }
