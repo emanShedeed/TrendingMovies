@@ -2,7 +2,7 @@
 //  ImageAPIClient.swift
 //  Trending Movies
 //
-//  Created by Mohamed on 08/02/2024.
+//  Created by Eman Shedeed on 08/02/2024.
 //
 
 import RxSwift

@@ -2,7 +2,7 @@
 //  UIColor+Extension.swift
 //  Trending Movies
 //
-//  Created by Mohamed on 10/02/2024.
+//  Created by Eman Shedeed on 10/02/2024.
 //
 
 import UIKit

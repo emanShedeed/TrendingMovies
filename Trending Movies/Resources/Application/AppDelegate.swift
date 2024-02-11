@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Trending Movies
 //
-//  Created by Mohamed on 05/02/2024.
+//  Created by Eman Shedeed on 05/02/2024.
 //
 
 import UIKit

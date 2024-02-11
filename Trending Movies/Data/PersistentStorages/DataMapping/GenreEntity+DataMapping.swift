@@ -2,7 +2,7 @@
 //  GenreEntity+DataMapping.swift
 //  Trending Movies
 //
-//  Created by Mohamed on 07/02/2024.
+//  Created by Eman Shedeed on 07/02/2024.
 //
 
 import CoreData
