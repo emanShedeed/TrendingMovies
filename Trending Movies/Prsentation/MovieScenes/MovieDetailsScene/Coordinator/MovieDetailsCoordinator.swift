@@ -18,7 +18,7 @@ class MovieDetailsCoordinator: Coordinator {
     }
     
     func start() {
-        let viewModel = MovieDetailsViewModel(movieId: movieId, movieDetailsRepository: MovieDetailsRepository(), imageRepository: ImageRepository())
+        let viewModel = MovieDetailsViewModel(movieId: movieId, movieDetailsRepository: OfflineMovieDetailsRepository(), imageRepository: ImageRepository())
         let viewController = MovieDetailsViewController(viewModel: viewModel)
         navigationController.pushViewController(viewController, animated: true)
     }
