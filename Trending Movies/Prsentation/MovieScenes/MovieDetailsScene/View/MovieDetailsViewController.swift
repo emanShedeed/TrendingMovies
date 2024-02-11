@@ -91,7 +91,6 @@ class MovieDetailsViewController: UIViewController {
         
         // Set up constraints for imageView
         imageView.contentMode = .scaleToFill
-        imageView.backgroundColor = .yellow
         imageView.heightAnchor.constraint(equalToConstant: 250).isActive = true
         
         // Configure text colors

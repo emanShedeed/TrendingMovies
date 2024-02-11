@@ -25,9 +25,9 @@ class OnlineGenreRepository: GenreRepositoryProtocol {
 // MARK: - Offline Genre Repository
 
 class OfflineGenreRepository: GenreRepositoryProtocol {
-    let coreDataStorage: CoreDataStorage
+    let coreDataStorage: CoreDataStorageProtocol
 
-    init(coreDataStorage: CoreDataStorage = CoreDataStorage.shared) {
+    init(coreDataStorage: CoreDataStorageProtocol = CoreDataStorage.shared) {
         self.coreDataStorage = coreDataStorage
     }
 

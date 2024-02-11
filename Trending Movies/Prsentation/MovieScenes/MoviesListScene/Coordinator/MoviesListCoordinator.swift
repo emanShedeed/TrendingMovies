@@ -16,7 +16,7 @@ class MoviesListCoordinator: Coordinator {
     }
     
     func start() {
-        let viewModel = MoviesListViewModel(movieService: OfflineMovieRepository(), genreService: OfflineGenreRepository(), searchMovieService: SearchMovieRepository())
+        let viewModel = MoviesListViewModel(movieService: OfflineMoviesRepository(), genreService: OfflineGenreRepository(), searchMovieService: SearchMovieRepository())
         let viewController = MoviesListViewController(viewModel: viewModel)
         viewModel.coordinator = self
         navigationController.pushViewController(viewController, animated: true)

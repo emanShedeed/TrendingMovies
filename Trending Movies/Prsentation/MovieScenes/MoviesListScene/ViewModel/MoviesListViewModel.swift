@@ -30,13 +30,13 @@ class MoviesListViewModel: MoviesListViewModelProtocol {
     var currentPage: Int = 1
     var coordinator: MoviesListCoordinator?
     
-    private let movieService: MovieRepositoryProtocol
+    private let movieService: MoviesRepositoryProtocol
     private let searchMovieService: SearchMovieRepositoryProtocol
     private let genreService: GenreRepositoryProtocol
     private var totalPages: Int = 1
     private let disposeBag = DisposeBag()
     
-    init(movieService: MovieRepositoryProtocol, genreService: GenreRepositoryProtocol, searchMovieService: SearchMovieRepositoryProtocol) {
+    init(movieService: MoviesRepositoryProtocol, genreService: GenreRepositoryProtocol, searchMovieService: SearchMovieRepositoryProtocol) {
         self.movieService = movieService
         self.genreService = genreService
         self.searchMovieService = searchMovieService

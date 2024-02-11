@@ -17,9 +17,9 @@ protocol SearchMovieRepositoryProtocol {
 
 // SearchMovieRepository class conforming to the protocol
 class SearchMovieRepository: SearchMovieRepositoryProtocol {
-    let coreDataStorage: CoreDataStorage
+    let coreDataStorage: CoreDataStorageProtocol
     
-    init(coreDataStorage: CoreDataStorage = CoreDataStorage.shared) {
+    init(coreDataStorage: CoreDataStorageProtocol = CoreDataStorage.shared) {
         self.coreDataStorage = coreDataStorage
     }
     

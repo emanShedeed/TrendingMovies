@@ -13,9 +13,9 @@ protocol MovieDetailsRepositoryProtocol {
 }
 // Offline Movie Details Repository
 class OfflineMovieDetailsRepository: MovieDetailsRepositoryProtocol {
-    let coreDataStorage: CoreDataStorage
+    let coreDataStorage: CoreDataStorageProtocol
     
-    init(coreDataStorage: CoreDataStorage = CoreDataStorage.shared) {
+    init(coreDataStorage: CoreDataStorageProtocol = CoreDataStorage.shared) {
         self.coreDataStorage = coreDataStorage
     }
     

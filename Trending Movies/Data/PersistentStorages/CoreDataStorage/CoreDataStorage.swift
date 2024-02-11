@@ -7,6 +7,16 @@
 
 import CoreData
 
+// MARK: - CoreDataStorageProtocol
+
+protocol CoreDataStorageProtocol {
+    var persistentContainer: NSPersistentContainer { get }
+    func saveContext()
+    func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void)
+}
+
+// MARK: - CoreDataStorageError
+
 enum CoreDataStorageError: Error, Equatable {
     case readError
     case saveError(Error)
@@ -24,12 +34,15 @@ enum CoreDataStorageError: Error, Equatable {
         }
     }
 }
-final class CoreDataStorage {
+
+// MARK: - CoreDataStorage
+
+final class CoreDataStorage: CoreDataStorageProtocol {
 
     static let shared = CoreDataStorage()
-    
+
     // MARK: - Core Data stack
-     lazy var persistentContainer: NSPersistentContainer = {
+    lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Trending_Movies")
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {
@@ -57,3 +70,4 @@ final class CoreDataStorage {
         persistentContainer.performBackgroundTask(block)
     }
 }
+
