@@ -15,7 +15,6 @@ struct APIs {
     enum Movies: EndPoint {
         
         case fetchMovies(pageNo:String)
-        //case fetc÷hProductById(id: String)
         case fetchGenres
       
         var subdomain: String{
@@ -38,6 +37,26 @@ struct APIs {
         }
 
     }
+    enum MovieDetails: EndPoint {
+        
+        case fetchMovieDetails(id: String)
+      
+        var subdomain: String{
+            switch self {
+            case .fetchMovieDetails(let id):
+                return "movie/\(id)"
+            }
+        }
+        var path: String {
+            switch self {
+            case .fetchMovieDetails:
+                 return ""
+           
+         
+            }
+        }
+
+    }  
     enum Images: EndPoint {
  
         case fetchImageData

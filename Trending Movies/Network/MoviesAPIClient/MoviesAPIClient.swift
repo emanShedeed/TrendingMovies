@@ -6,7 +6,6 @@
 //
 
 import RxSwift
-import Foundation
 
 class MoviesAPIClient {
     

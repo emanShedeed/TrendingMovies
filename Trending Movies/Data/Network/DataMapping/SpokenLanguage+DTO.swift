@@ -8,14 +8,13 @@
 import Foundation
 
 struct SpokenLanguageDTO: Decodable {
-    
-    let id: Int
+ 
     let name: String
 
 }
 
 extension SpokenLanguageDTO {
     func toDomain() -> SpokenLanguage {
-        return SpokenLanguage(id: self.id, name: self.name)
+        return SpokenLanguage(name: self.name)
     }
 }

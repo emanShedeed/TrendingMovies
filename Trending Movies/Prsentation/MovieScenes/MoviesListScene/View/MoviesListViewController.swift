@@ -138,8 +138,14 @@ extension MoviesListViewController: UICollectionViewDelegate {
 
                       cell.decorate()
               handleFetchingMovies()
+           }else if collectionView == moviesCollectionView {
+               // Movie cell selected, get the movie ID and show details
+               guard let movieViewModel = viewModel.movies.value[safe: indexPath.item] else {
+                   return
+               }
+               viewModel.didTapMovie(at: movieViewModel.id)
            }
-       }
+    }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if collectionView == genreCollectionView {

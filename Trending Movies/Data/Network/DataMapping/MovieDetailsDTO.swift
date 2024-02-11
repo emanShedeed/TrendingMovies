@@ -34,7 +34,7 @@ struct MovieDetailsDTO : Decodable{
         return nil
     }
     
-    static func formatSpokenLanguages(_ spokenLanguages: [SpokenLanguage]?) -> String {
+    static func formatSpokenLanguages(_ spokenLanguages: [SpokenLanguageDTO]?) -> String {
         guard let spokenLanguages = spokenLanguages else { return "" }
         return spokenLanguages.map { $0.name }.joined(separator: ", ")
     }
@@ -67,7 +67,6 @@ extension MovieDetailsDTO {
         if let spokenLanguages = self.spokenLanguages {
             for spokenLanguageDTO in spokenLanguages {
                 let spokenLanguageEntity = SpokenLanguageEntity(context: context)
-                spokenLanguageEntity.id = Int32(spokenLanguageDTO.id)
                 spokenLanguageEntity.name = spokenLanguageDTO.name
                 movieEntity.addToLanguages(spokenLanguageEntity)
             }

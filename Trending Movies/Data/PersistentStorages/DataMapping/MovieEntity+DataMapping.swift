@@ -11,7 +11,7 @@ extension MovieEntity {
     func toDTO() -> MovieDetailsDTO {
         var spokenLanguagesDTO: [SpokenLanguageDTO]? = nil
         if let spokenLanguagesSet = self.languages as? Set<SpokenLanguageEntity> {
-            spokenLanguagesDTO = spokenLanguagesSet.map { SpokenLanguageDTO(id: Int($0.id), name: $0.name ?? "") }
+            spokenLanguagesDTO = spokenLanguagesSet.map { SpokenLanguageDTO(name: $0.name ?? "") }
         }
 
         var genresDTO: [GenreDTO] = []

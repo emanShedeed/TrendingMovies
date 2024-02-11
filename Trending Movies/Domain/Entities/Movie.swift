@@ -24,7 +24,6 @@ struct Movie {
 
 // MARK: - SpokenLanguage
 struct SpokenLanguage: Codable {
-    let id: Int
     let name: String
 
 }

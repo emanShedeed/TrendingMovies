@@ -18,6 +18,7 @@ protocol MoviesListViewModelProtocol {
     func fetchMovies(page: Int)
     func fetchGenres()
     func searchMovies(query: String?, genreId: Int?)
+    func didTapMovie(at id: Int)
 }
 
 // MARK: - View Model: MoviesListViewModel
@@ -96,11 +97,15 @@ class MoviesListViewModel: MoviesListViewModelProtocol {
                     // Handle completion if needed
                 }
             )
-            .disposed(by: disposeBag)   
+            .disposed(by: disposeBag)
     }
     
+    func didTapMovie(at id: Int) {
+           coordinator?.showMovieDetail(id: id)
+       }
     private func resetPages() {
         currentPage = 0
         totalPages = 1
         movies.accept([])
-    }}
+    }
+}

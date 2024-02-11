@@ -13,10 +13,6 @@ protocol MovieRepositoryProtocol {
 }
 
 // Offline Movie Repository
-import Foundation
-import CoreData
-import RxSwift
-
 class OfflineMovieRepository: MovieRepositoryProtocol {
     let coreDataStorage: CoreDataStorage
 

@@ -22,7 +22,12 @@ class MoviesListCoordinator: Coordinator {
         navigationController.pushViewController(viewController, animated: true)
     }
     
-  /*  func showMovieDetail(movie: MovieModel) {
-        // Implement navigation to the movie detail view
-    }*/
+   func showMovieDetail(id: Int) {
+       // Navigate to the movie detail view controller
+              let movieDetailsCoordinator = MovieDetailsCoordinator(navigationController: navigationController, movieId: id)
+              // Add the movie details coordinator to the child coordinators array
+              childCoordinators.append(movieDetailsCoordinator)
+              // Start the coordinator and show the movie details
+              movieDetailsCoordinator.start()
+    }
 }
