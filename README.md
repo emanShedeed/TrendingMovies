@@ -1,8 +1,11 @@
 # TrendingMovies
 this is an iOS application that displays the next
 ● A list of trending movies
+
 ○ The list should support pagination
+
 ○ Movie item contains at least
+
 
 ■ Title
 
